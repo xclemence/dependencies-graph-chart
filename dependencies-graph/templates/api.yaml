@@ -6,7 +6,7 @@ metadata:
     app:  {{ include "dependencies-graph.fullname" . }}-api
     {{- include "dependencies-graph.labels" . | nindent 4 }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.api.replicaCount }}
   selector:
     matchLabels:
       app:  {{ include "dependencies-graph.fullname" . }}-api

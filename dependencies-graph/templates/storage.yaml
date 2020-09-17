@@ -1,3 +1,4 @@
+{{- if not .Values.neo4j.persistentVolumeClaimName -}}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -13,3 +14,4 @@ spec:
   resources:
     requests:
       storage: 1Gi
+{{- end }}

@@ -6,7 +6,7 @@ metadata:
     app: {{ include "dependencies-graph.fullname" . }}-neo4j
     {{- include "dependencies-graph.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.neo4j.replicaCount }}
+  replicas: 1
   selector:
     matchLabels:
       app: {{ include "dependencies-graph.fullname" . }}-neo4j
@@ -38,7 +38,11 @@ spec:
       volumes:
       - name: neo4j-data
         persistentVolumeClaim:
+          {{- if .Values.neo4j.persistentVolumeClaimName }}
+          claimName: {{ $.Values.neo4j.persistentVolumeClaimName }}
+          {{- else }}
           claimName: {{ include "dependencies-graph.fullname" . }}-volume-claim
+          {{- end }}
       - name: neo4j-logs
         emptyDir: {}
 

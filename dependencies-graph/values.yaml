@@ -2,12 +2,12 @@ nameOverride: ""
 fullnameOverride: ""
 
 neo4j:
-  replicaCount: 1
   dockerImage: "neo4j"
   dockerTag: "4.0.4"
   httpsPort: 7473
   httpPort: 7474
   boltPort: 7687
+  persistentVolumeClaimName: ""
 
 api:
   replicaCount: 1

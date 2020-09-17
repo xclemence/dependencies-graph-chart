@@ -1,0 +1,11 @@
+Services deployed
+ - {{ include "dependencies-graph.fullname" . }}-graphql ({{ .Values.graphql.port }})
+ - {{ include "dependencies-graph.fullname" . }}-api ({{ .Values.api.port }})
+ - {{ include "dependencies-graph.fullname" . }}-view ({{ .Values.viewer.port }})
+ - {{ include "dependencies-graph.fullname" . }}-neo4j ({{ .Values.neo4j.boltPort }}, {{ .Values.neo4j.httpPort }}, {{.Values.neo4j.httpsPort }})
+
+{{- if .Values.neo4j.persistentVolumeClaimName }}
+User existing persistent volume claim : {{ $.Values.neo4j.persistentVolumeClaimName }}
+{{- else }}
+Create persistent volume claim : {{ include "dependencies-graph.fullname" . }}-volume-claim
+{{- end }}
