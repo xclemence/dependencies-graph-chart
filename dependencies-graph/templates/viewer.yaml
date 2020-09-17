@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  {{ include "dependencies-graph.fullname" . }}-viewer
+  labels:
+    app:  {{ include "dependencies-graph.fullname" . }}-viewer
+    {{- include "dependencies-graph.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app:  {{ include "dependencies-graph.fullname" . }}-viewer
+  template:
+    metadata:
+      labels:
+        app:  {{ include "dependencies-graph.fullname" . }}-viewer
+    spec:
+      imagePullSecrets:
+      - name: github
+      containers:
+      - name:  {{ include "dependencies-graph.fullname" . }}-viewer
+        image: {{ .Values.viewer.dockerImage }}:{{ .Values.viewer.dockerTag }}
+        env:
+          - name: DEPENDENCIES_GRAPHQL_URI
+            valueFrom:
+              configMapKeyRef:
+                name: {{ include "dependencies-graph.fullname" . }}-config
+                key: graphqlUri
+        ports:
+        - containerPort: 4200
+          protocol: TCP
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "dependencies-graph.fullname" . }}-viewer-service
+spec:
+  selector:
+    app: {{ include "dependencies-graph.fullname" . }}-viewer
+  ports:
+    - protocol: TCP
+      name: http
+      port: 4200
+      targetPort: {{ .Values.viewer.port }}
+

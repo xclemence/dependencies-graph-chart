@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  {{ include "dependencies-graph.fullname" . }}-api
+  labels:
+    app:  {{ include "dependencies-graph.fullname" . }}-api
+    {{- include "dependencies-graph.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app:  {{ include "dependencies-graph.fullname" . }}-api
+  template:
+    metadata:
+      labels:
+        app:  {{ include "dependencies-graph.fullname" . }}-api
+    spec:
+      containers:
+      - name:  {{ include "dependencies-graph.fullname" . }}-api
+        image: {{ .Values.api.dockerImage }}:{{ .Values.api.dockerTag }}
+        env:
+          - name: GraphConfig__Uri
+            valueFrom:
+              configMapKeyRef:
+                name: {{ include "dependencies-graph.fullname" . }}-config
+                key: neo4jDatabase
+          - name: ASPNETCORE_URLS
+            value: http://*:8000
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        volumeMounts:
+        - name: api-logs
+          mountPath: /api/logs
+      volumes:
+      - name: api-logs
+        emptyDir: {}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "dependencies-graph.fullname" . }}-api-service
+spec:
+  selector:
+    app: {{ include "dependencies-graph.fullname" . }}-api
+  ports:
+    - protocol: TCP
+      name: http
+      port: 8000
+      targetPort: {{ .Values.api.port}}

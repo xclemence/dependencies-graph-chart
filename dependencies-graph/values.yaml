@@ -1,0 +1,31 @@
+nameOverride: ""
+fullnameOverride: ""
+
+neo4j:
+  replicaCount: 1
+  dockerImage: "neo4j"
+  dockerTag: "4.0.4"
+  httpsPort: 7473
+  httpPort: 7474
+  boltPort: 7687
+
+api:
+  replicaCount: 1
+  dockerImage: "xclemence/dependencies-graph-api"
+  dockerTag: "1.1.0"
+  port: 8000
+
+graphql:
+  replicaCount: 1
+  dockerImage: "xclemence/dependencies-graph-graphql"
+  dockerTag: "1.0.2"
+  port: 4001
+
+viewer:
+  replicaCount: 1
+  dockerImage: "xclemence/dependencies-graph-viewer"
+  dockerTag: "1.2.0"
+  port: 4200
+  graphqlUri: "https://www.dependencies-graph.xyz/graph-graphql/graphql"
+
+  

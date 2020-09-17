@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "dependencies-graph.fullname" . }}-neo4j
+  labels:
+    app: {{ include "dependencies-graph.fullname" . }}-neo4j
+    {{- include "dependencies-graph.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.neo4j.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "dependencies-graph.fullname" . }}-neo4j
+  template:
+    metadata:
+      labels:
+        app: {{ include "dependencies-graph.fullname" . }}-neo4j
+    spec:
+      containers:
+      - name: {{ include "dependencies-graph.fullname" . }}-neo4j
+        image: {{ .Values.neo4j.dockerImage }}:{{ .Values.neo4j.dockerTag }}
+        env:
+          - name: NEO4J_AUTH
+            value: none
+          - name: NEO4JLABS_PLUGINS
+            value: "[\"apoc\"]"
+        ports:
+        - containerPort: 7473
+          protocol: TCP
+        - containerPort: 7474
+          protocol: TCP
+        - containerPort: 7687
+          protocol: TCP
+        volumeMounts:
+        - name: neo4j-data
+          mountPath: /data
+        - name: neo4j-logs
+          mountPath: /logs
+      volumes:
+      - name: neo4j-data
+        persistentVolumeClaim:
+          claimName: {{ include "dependencies-graph.fullname" . }}-volume-claim
+      - name: neo4j-logs
+        emptyDir: {}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "dependencies-graph.fullname" . }}-neo4j-service
+spec:
+  selector:
+    app: {{ include "dependencies-graph.fullname" . }}-neo4j
+  ports:
+    - protocol: TCP
+      name: http
+      port: 7473
+      targetPort: {{ .Values.neo4j.httpsPort }}
+    - protocol: TCP
+      name: https
+      port: 7474
+      targetPort:  {{ .Values.neo4j.httpPort }}
+    - protocol: TCP
+      name: bolt
+      port: 7687
+      targetPort:  {{ .Values.neo4j.boltPort }}
+
+

@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  {{ include "dependencies-graph.fullname" . }}-graphql
+  labels:
+    app:  {{ include "dependencies-graph.fullname" . }}-graphql
+    {{- include "dependencies-graph.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app:  {{ include "dependencies-graph.fullname" . }}-graphql
+  template:
+    metadata:
+      labels:
+        app:  {{ include "dependencies-graph.fullname" . }}-graphql
+    spec:
+      containers:
+      - name:  {{ include "dependencies-graph.fullname" . }}-graphql
+        image: {{ .Values.graphql.dockerImage }}:{{ .Values.graphql.dockerTag }}
+        env:
+          - name: NEO4J_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: {{ include "dependencies-graph.fullname" . }}-config
+                key: neo4jDatabase
+        ports:
+        - containerPort: 4001
+          protocol: TCP
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "dependencies-graph.fullname" . }}-graphql-service
+spec:
+  selector:
+    app: {{ include "dependencies-graph.fullname" . }}-graphql
+  ports:
+    - protocol: TCP
+      name: http
+      port: 4001
+      targetPort:  {{ .Values.graphql.port }}
+

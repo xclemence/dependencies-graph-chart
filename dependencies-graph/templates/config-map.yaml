@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "dependencies-graph.fullname" . }}-config
+data:
+  neo4jDatabase: "bolt://{{ include "dependencies-graph.fullname" . }}-neo4j-service"
+  graphqlUri: {{ .Values.viewer.graphqlUri | quote }}
