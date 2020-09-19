@@ -15,7 +15,4 @@ jobs:
       - name: Lint
         run: helm lint
         working-directory: dependencies-graph
-
-      - name: Try install
-        run: helm install dependencies-graph ./dependencies-graph --set fullnameOverride=graph --namespace dependencies-graph --dry-run --debug
     
