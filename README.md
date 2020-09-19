@@ -1,10 +1,11 @@
-# dependencies-graph-chart
+# Dependencies Graph Chart
 Helm chart for Dependencies Graph software.
 It will deploy the following:
-- neo4j database
-- dependencies graph api
-- dependencies graph Viewer
-- dependencies graph graphql
+[link to Google!](http://google.com)
+- [neo4j](https://neo4j.com/) database
+- [dependencies graph api](https://github.com/xclemence/dependencies-graph-services)
+- [dependencies graph Viewer](https://github.com/xclemence/dependencies-graph-viewer)
+- [dependencies graph graphql](https://github.com/xclemence/dependencies-graph-graphql)
 
 ## Installing the Chart
 
