@@ -1,9 +1,26 @@
+{{- $neo4jServices := printf "%s-%s-service" (include "dependencies-graph.fullname" .) "neo4j"}}
+{{- $neo4j := dict "name" $neo4jServices "port" .Values.neo4j.httpPort}}
+
+{{- $serviceNames := dict }}
+
+{{- range tuple "api" "viewer" }}
+  {{- $_ := set $serviceNames . (printf "%s-%s-service" (include "dependencies-graph.fullname" $)  . )}}
+{{ end }}
+
+{{- $servicePorts := dict "neo4j" .Values.neo4j.httpPort}}
+{{- $_ := set $servicePorts "api" .Values.api.port}}
+{{- $_ := set $servicePorts "viewer" .Values.viewer.port}}
+
+{{- $additionalUriParts := dict "api" "/index.html"}}
+
+{{- range $key, $value := $serviceNames }}
+# {{$key}} -> {{$value}} : {{ get $servicePorts $key }}
 apiVersion: v1
 kind: Pod
 metadata:
-  name: "{{ include "dependencies-graph.fullname" . }}-api-test-connection"
+  name: "{{ $value }}-test-connection"
   labels:
-    {{- include "dependencies-graph.labels" . | nindent 4 }}
+    {{- include "dependencies-graph.labels" $ | nindent 4 }}
   annotations:
     "helm.sh/hook": test-success
 spec:
@@ -11,6 +28,7 @@ spec:
     - name: wget
       image: busybox
       command: ['wget']
-      args: ['{{ include "dependencies-graph.fullname" . }}-api:{{ .Values.api.port }}']
+      args: ['{{ $value }}:{{ get $servicePorts $key }}{{ get $additionalUriParts $key }}']
   restartPolicy: Never
-
+---
+{{ end }}
