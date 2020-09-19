@@ -1,4 +1,7 @@
 # Dependencies Graph Chart
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](/LICENSE)
+[![Test][github-actions-badge]][github-actions]
+
 Helm chart for Dependencies Graph software.
 It will deploy the following:
 [link to Google!](http://google.com)
@@ -82,4 +85,5 @@ All items generated are prefixed by "ReleaseName-ChartName". You can customize p
 
 > Pod configurations are stored inside config map **{prefix}-config**
 
-
+[github-actions]:                   https://github.com/xclemence/dependencies-graph-chart/actions
+[github-actions-badge]:             https://github.com/xclemence/dependencies-graph-chart/workflows/Test/badge.svg?branch=master
