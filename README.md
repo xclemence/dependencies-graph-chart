@@ -3,8 +3,7 @@
 [![Test][github-actions-badge]][github-actions]
 
 Helm chart for Dependencies Graph software.
-It will deploy the following:
-[link to Google!](http://google.com)
+It will deploy the following items:
 - [neo4j](https://neo4j.com/) database
 - [dependencies graph api](https://github.com/xclemence/dependencies-graph-services)
 - [dependencies graph Viewer](https://github.com/xclemence/dependencies-graph-viewer)
